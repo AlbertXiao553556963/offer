@@ -1,12 +1,18 @@
 package algorithm.recursive;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author: XiaoMingxuan
  * @email: mingxuan.xmx@alibaba-inc.com
  * @create: 2018-12-20 23:00
- * 上台阶问题
+ * 使用迭代法解决上台阶问题
  **/
 public class StepGo {
+
+    private static int[] stepNum = {1,2};
 
     public static int loop(int n) {
         if(n == 0) return 0;
@@ -30,9 +36,28 @@ public class StepGo {
         return recursive(n -1 ) + recursive(n - 2);
     }
 
+    public static void getResult(int n, List<Integer> list) {
+
+        if(n < 0) return;
+
+        if(n == 0) {
+            System.out.println(list);
+            return;
+        }
+
+        for(int i = 0; i < stepNum.length; i++) {
+            List newList = list.stream().collect(Collectors.toList());
+            newList.add(stepNum[i]);
+            getResult(n -  stepNum[i], newList);
+        }
+
+    }
+
     public static void main(String[] args) {
         int n = 4;
-        System.out.println(n + "阶台阶走法，使用递归计算" + recursive(n));
-        System.out.println(n + "阶台阶走法，使用循环计算" + loop(n));
+        System.out.println(n + " step has " + recursive(n) + " strategy");
+        System.out.println(n + " step has " + loop(n) + " strategy");
+        //print node
+        getResult(n, new ArrayList());
     }
 }

@@ -1,43 +1,56 @@
 package algorithm.dp;
 
 
-import java.util.Scanner;
+import java.util.*;
 
 /**
- * åŠ¨æ€è§„åˆ’-ç¡¬å¸æ‰¾é›¶
+ * ¶¯Ì¬¹æ»®-Ó²±ÒÕÒÁã
  */
-public class CoinChange {  
+public class CoinChange {
+
+	// Ó²±ÒÃæÖµÔ¤ÏÈÒÑ¾­°´½µĞòÅÅÁĞ
+	static int[] coinValue = new int[] { 50, 20, 11, 5, 2,1 };
+
+
 	/**  
-	 * @param coins  ä¿å­˜æ¯ä¸€ç§ç¡¬å¸çš„å¸å€¼çš„æ•°ç»„  
-	 * @param money  éœ€è¦æ‰¾é›¶çš„é¢å€¼  
+	 * @param money  ĞèÒªÕÒÁãµÄÃæÖµ
 	 */ 
-	public static void changeCoins(int[] coins,int money) {  
-		int[] coinsUsed = new int[money + 1];  	 // ä¿å­˜é¢å€¼ä¸ºiçš„çº¸å¸æ‰¾é›¶æ‰€éœ€çš„æœ€å°ç¡¬å¸æ•°
-		int valueKinds = coins.length;		//ç¡¬å¸ç§ç±»æ•°é‡
+	public static void changeCoins(int money) {
+
+	    Map<Integer, List<Integer>> result = new HashMap<>();
+
+		int[] coinsUsed = new int[money + 1];  	 // ±£´æÃæÖµÎªiµÄÖ½±ÒÕÒÁãËùĞèµÄ×îĞ¡Ó²±ÒÊı
+
 		for(int i = 1 ; i <= money; i++) {
-			for(int j = 0; j < valueKinds; j++) {
-				if(i >= coins[j]) {
-					int temp =  coinsUsed[i - coins[j]] + 1;
-					if(coinsUsed[i] == 0) {
-						coinsUsed[i]  =temp;
+			for(int j = 0; j < coinValue.length; j++) {
+				if(i >= coinValue[j]) {
+					int temp =  coinsUsed[i - coinValue[j]] + 1;
+					if(coinsUsed[i] == 0 || temp < coinsUsed[i]) {
+						coinsUsed[i] = temp;
+						if(result.get(i) == null) {
+						    result.put(i, new ArrayList<>());
+                        }
+                        List list = result.get(i);
+						if(i > coinValue[j]) list.addAll(result.get(i - coinValue[j]));
+                        list.add(coinValue[j]);
 					}
-					coinsUsed[i] = Math.min(coinsUsed[i], temp);
 				}
 			}
 		}
-		System.out.println("æ‰¾é›¶" + money +  "éœ€è¦ç¡¬å¸ä¸ªæ•°:" + coinsUsed[money]);
-	}  
+
+		System.out.println("ÕÒÁã" + money +  "ĞèÒªÓ²±Ò¸öÊı:" + coinsUsed[money]);
+		System.out.println("ÕÒÁã¸öÊı:" + result.get(money));
+	}
  
 	public static void main(String[] args) {  
-		// ç¡¬å¸é¢å€¼é¢„å…ˆå·²ç»æŒ‰é™åºæ’åˆ—  
-		int[] coinValue = new int[] { 50, 20, 11, 5, 2,1 };  
-		// éœ€è¦æ‰¾é›¶çš„é¢å€¼
+
+		// ĞèÒªÕÒÁãµÄÃæÖµ
 		while (true) {
-			System.out.println("è¯·è¾“å…¥éœ€è¦æ‰¾é›¶çš„é¢å€¼:");
+			System.out.println("ÇëÊäÈëĞèÒªÕÒÁãµÄÃæÖµ:");
 			Scanner in = new Scanner(System.in);
 			int money = Integer.valueOf(in.nextLine());
-			// ä¿å­˜æ¯ä¸€ä¸ªé¢å€¼æ‰¾é›¶æ‰€éœ€çš„æœ€å°ç¡¬å¸æ•°ï¼Œ0å·å•å…ƒèˆå¼ƒä¸ç”¨ï¼Œæ‰€ä»¥è¦å¤šåŠ 1
-			changeCoins(coinValue,  money);
+			// ±£´æÃ¿Ò»¸öÃæÖµÕÒÁãËùĞèµÄ×îĞ¡Ó²±ÒÊı£¬0ºÅµ¥ÔªÉáÆú²»ÓÃ£¬ËùÒÔÒª¶à¼Ó1
+			changeCoins(money);
 		}
 	}
  
